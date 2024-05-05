@@ -1,0 +1,2 @@
+# Safe Havens - An Apocalypse Checker
+Safe Havens is a conceptual blockchain art project created on Bitcoin Ordinals and distributed via Bitcoin Runes. You can read more about it on the Mirror article.

@@ -1,0 +1,187 @@
+<!--
+  In case if you're living in a world that can't decipher the code below, here is a brief explanation for you:
+  This code contains a list of safe havens, web pages, domains to check if they are alive or not.
+  In case a domain is down, the code will automatically redirect you to the next safe haven.
+  If all safe havens are down, then it means we're probably in an apocalypse.
+  Good luck...
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Safe Havens by Yigit Duman</title>
+		<style>
+			body {
+				background-color: #1d1d1d;
+				font-family: "Lucida Console", "Courier New", monospace, serif;
+				color: #eee;
+				margin: 0;
+				padding: 4rem;
+			}
+			p {
+				margin: 0;
+				margin-block-start: 0.4em;
+				margin-block-end: 0.4em;
+			}
+		</style>
+		<script>
+			const domains = [
+				"https://google.com",
+				"https://wikipedia.org",
+				"https://nasa.gov",
+				"https://harvard.edu",
+				"https://bbc.co.uk",
+				"https://un.org",
+				"https://nationalgeographic.com",
+				"https://who.int",
+				"https://libraryofcongress.gov",
+				"https://moma.org",
+				"https://imf.org",
+				"https://cern.ch",
+				"https://si.edu",
+				"https://redcross.org",
+				"https://nytimes.com",
+				"https://amazon.com",
+				"https://unesco.org",
+				"https://mit.edu",
+				"https://vatican.va",
+				"https://kew.org",
+			];
+
+			// shuffle domains
+			for (let i = domains.length - 1; i > 0; i--) {
+				const j = Math.floor(Math.random() * (i + 1));
+				[domains[i], domains[j]] = [domains[j], domains[i]];
+			}
+
+			async function writeAnimation(toWrite, element) {
+				let i = 0;
+				await new Promise((resolve) => setTimeout(resolve, 50));
+				while (i < toWrite.length) {
+					element.textContent += toWrite[i];
+					i++;
+					await new Promise((resolve) => setTimeout(resolve, 50));
+				}
+				await new Promise((resolve) => setTimeout(resolve, 500));
+			}
+
+			async function start() {
+				document.body.innerHTML +=
+					"<p style='margin-top: 2rem;' id='checking'></p>";
+				const toWrite = "> Checking for safe havens...";
+				const checking = document.getElementById("checking");
+				await writeAnimation(toWrite, checking);
+				document.querySelector("#header").style.color = "unset";
+				checkDomain(0);
+			}
+
+			async function showApocalypse() {
+				document.body.innerHTML += `<p id='apocalypse' style='color: red; margin-top: 2rem;'></p>`;
+				document.body.innerHTML += `<p id='apocalypse2' style='margin-top: 2rem;'></p>`;
+				document.body.innerHTML += `<p id='apocalypse3' style='margin-top: 2rem;'></p>`;
+				document.body.innerHTML += `<p id='apocalypse4' style='margin-top: 0rem;'></p>`;
+				await writeAnimation(
+					`> APOCALYPSE`,
+					document.getElementById("apocalypse")
+				);
+				await writeAnimation(
+					`> Nothing really ever mattered.`,
+					document.getElementById("apocalypse2")
+				);
+				await writeAnimation(
+					`> Your existence is`,
+					document.getElementById("apocalypse3")
+				);
+				await writeAnimation(
+					`> as unimportant as always.`,
+					document.getElementById("apocalypse4")
+				);
+			}
+
+			async function checkDomain(index) {
+				if (index >= domains.length) {
+					await showApocalypse();
+					return;
+				}
+
+				document.body.innerHTML +=
+					"<p style='display: inline-block;margin-top: 0rem;' id='checking" +
+					index +
+					"'></p>";
+				await writeAnimation(
+					`> Checking safe haven: `,
+					document.getElementById("checking" + index)
+				);
+				document.body.innerHTML +=
+					"<p style='display: inline-block; color: yellow; margin-top: 0rem;' id='domain" +
+					index +
+					"'></p>";
+				await writeAnimation(
+					` ${domains[index].replace("https://", "")}`,
+					document.getElementById("domain" + index)
+				);
+				await new Promise((resolve) => setTimeout(resolve, 1000));
+
+				try {
+					const response = await Promise.race([
+						fetch(domains[index], { mode: "no-cors" }),
+						new Promise((_, reject) =>
+							setTimeout(() => reject(new Error("Timeout")), 3000)
+						),
+					]);
+					if (response.ok || response.type === "opaque") {
+						document.body.innerHTML += `<p id='result' style='color: green; margin-top: 0rem;'></p>`;
+						await writeAnimation(
+							`> Congrats. Safe haven is still alive. Redirecting...`,
+							document.getElementById("result")
+						);
+						setTimeout(() => {
+							window.location.href = domains[index];
+						}, 3000);
+					} else {
+						throw new Error("Not OK");
+					}
+				} catch (error) {
+					document.body.innerHTML += `<p id='result${index}' style='color: red; margin-top: 0rem;'></p>`;
+					await writeAnimation(
+						`> Safe haven is down. Checking the next one...`,
+						document.getElementById("result" + index)
+					);
+					checkDomain(index + 1);
+				}
+			}
+
+			document.addEventListener("DOMContentLoaded", function () {
+				start();
+			});
+		</script>
+	</head>
+	<body>
+		<div id="header" style="color: yellow">
+			<p>Safe Havens</p>
+			<p>An apocalypse checker by Yigit Duman hosted on Bitcoin.</p>
+			<p>The safest haven in the universe.</p>
+		</div>
+		<noscript>
+			<div style="max-width: 600px">
+				<p style="color: red; margin-top: 2rem">
+					JavaScript is disabled. Please enable JavaScript to continue.
+				</p>
+				<p style="color: red; margin-top: 2rem; line-height: 1.5rem">
+					In case there is no JavaScript in your era, here is a GPT-4, an early
+					AI model explanation for you:
+				</p>
+				<p style="color: red; margin-top: 1rem; line-height: 1.5rem">
+					JavaScript was a programming language widely used for creating
+					interactive effects within web browsers, enabling dynamic content
+					manipulation and asynchronous data handling on web pages. It served as
+					a cornerstone of client-side scripting in the early internet era,
+					integrating seamlessly with HTML and CSS to enhance user experiences
+					on digital platforms.
+				</p>
+			</div>
+		</noscript>
+	</body>
+</html>
